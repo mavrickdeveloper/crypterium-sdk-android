@@ -1,0 +1,149 @@
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+apply from: rootProject.file('version.gradle')
+
+ext {
+    rxjavaVersion = '2.2.10'
+    rxjavaVersion = '2.2.10'
+    rxandroidVersion = '2.1.1'
+    rxkotlinVersion = '2.4.0'
+    retrofitVersion = '2.6.2'
+    daggerVersion = '2.21'
+    androidxVersion = '1.0.0'
+    androidxAppCompatVersion = '1.0.2'
+    opacappMultilineCollapsingToolbarVersion = '27.1.1'
+    constraintLayoutVersion = '2.0.0-beta6'
+    playServicesMapVersion = '17.0.0'
+    firebaseCoreVersion = '17.1.0'
+    firebaseDynamicLinksVersion = '19.1.0'
+    firebaseConfigVersion = '19.1.4'
+    firebasePerfVersion = '19.0.7'
+    firebaseMessagingVersion = '20.1.7'
+    roomVersion = '2.2.5'
+    lifecycleVersion = '2.2.0'
+    installReferrerVersion = '1.1.2'
+    junitVersion = '4.12'
+    testExtJunitVersion = '1.1.1'
+    androidTestRunnerVersion = '1.0.2'
+    mockitoVersion = '2.23.4'
+    espressoVersion = '3.2.0'
+    roboelecricVersion = '3.8'
+    okhttpVersion = '4.6.0'
+    leakcanaryVersion = '1.6.1'
+    clearableEditTextVersion = '0.0.5'
+    daimajiaSwipeLayoutVersion = '1.2.0'
+    mpAndroidChartVersion = 'v3.1.0-alpha'
+    kenglxnQrGenVersion = '2.3.0'
+    nex3zFlowLayoutVersion = '1.2.2'
+    glideVersion = '4.9.0'
+    socketIoClientVersion = '1.0.0'
+    jakewhartonRxbindingVersion = '2.1.1'
+    flurryAnalyticsVersion = '10.0.0@aar'
+    stethoVersion = '1.5.1'
+    reactiveCacheVersion = '1.1.3-2.x'
+    jolyglotGsonVersion = '0.0.4'
+    zxingVersion = '3.5.0'
+    emojiVersion = '1.0.0'
+    timberVersion = '4.7.1'
+    guavaVersion = '26.0-android'
+    crashlyticsVersion = '17.0.0'
+    phoneNumberVersion = '8.10.18'
+    lottieVersion = '3.0.7'
+    materialVersion = '1.2.0-alpha06'
+    navigationVersion = '2.3.0'
+    androidCoreKtxVersion = '1.2.0'
+    branchVersion = '5.0.1'
+    amplitudeSdkVersion = '2.14.1'
+    zendeskSupportVersion = '4.0.0'
+    zendeskChatVersion = '2.2.0'
+    zendeskMessagingVersion = '4.3.1'
+    pullRefreshLayoutVersion = '1.2.0'
+    storyProgressView = '3.0.0'
+    shimmerVersion = '0.5.0'
+    facebookSdkVersion = '5.4.0'
+    prefsKtxVersion = '1.1.1'
+    materialratingbarVersion = '1.3.2'
+    cameraviewVersion = '1.6.0'
+    apacheLang3 = '3.10'
+    log4j = '1.2.17'
+}
+
+android {
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 28
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    flavorDimensions "backend"
+
+    productFlavors {
+        prod {
+            dimension "backend"
+            resValue "string", "app_name", project.APP_NAME_PROD
+            buildConfigField "String", "APP_NAME", project.APP_NAME_PROD
+            buildConfigField "String", "BASE_URL", project.BASE_URL_PROD
+            buildConfigField "String", "MOCK_URL", project.MOCK_URL
+            buildConfigField "String", "NEWS_URL", project.NEWS_URL_PROD
+
+            buildConfigField "String", "FILEPROVIDER_AUTHORITY", '"' + project.APP_ID_PROD + '"'
+            manifestPlaceholders = [fileProviderAuthority: project.APP_ID_PROD]
+
+            buildConfigField "boolean", "ALLOW_SELECT_SERVER", "false"
+        }
+        beta {
+            dimension "backend"
+            resValue "string", "app_name", project.APP_NAME_BETA
+            buildConfigField "String", "APP_NAME", project.APP_NAME_BETA
+            buildConfigField "String", "BASE_URL", project.BASE_URL_BETA
+            buildConfigField "String", "MOCK_URL", project.MOCK_URL
+            buildConfigField "String", "NEWS_URL", project.NEWS_URL_BETA
+            versionNameSuffix "-beta"
+
+            buildConfigField "String", "FILEPROVIDER_AUTHORITY", '"' + project.APP_ID_BETA + '"'
+            manifestPlaceholders = [fileProviderAuthority: project.APP_ID_BETA]
+
+            buildConfigField "boolean", "ALLOW_SELECT_SERVER", "true"
+        }
+        stage {
+            dimension "backend"
+            resValue "string", "app_name", project.APP_NAME_STAGE
+            buildConfigField "String", "APP_NAME", project.APP_NAME_STAGE
+            buildConfigField "String", "BASE_URL", project.BASE_URL_STAGE
+            buildConfigField "String", "MOCK_URL", project.MOCK_URL
+            buildConfigField "String", "NEWS_URL", project.NEWS_URL_STAGE
+            versionNameSuffix "-stage"
+
+            buildConfigField "String", "FILEPROVIDER_AUTHORITY", '"' + project.APP_ID_STAGE + '"'
+            manifestPlaceholders = [fileProviderAuthority: project.APP_ID_STAGE]
+
+            buildConfigField "boolean", "ALLOW_SELECT_SERVER", "false"
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    dataBinding {
+        enabled = true
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+    google()
+}
+
+dependencies {
+    implementation "io.reactivex.rxjava2:rxandroid:${rxandroidVersion}"
+
+    kapt "com.google.dagger:dagger-compiler:${daggerVersion}"
+}

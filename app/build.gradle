@@ -1,0 +1,211 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+}
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'com.google.firebase.firebase-perf'
+apply plugin: 'androidx.navigation.safeargs.kotlin'
+
+apply from: rootProject.file('commonConfig.gradle')
+
+repositories {
+    mavenCentral()
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+    google()
+    maven { url 'https://maven.fabric.io/public' }
+    maven { url 'https://zendesk.jfrog.io/zendesk/repo' }
+}
+
+android {
+    defaultConfig {
+        dataBinding {
+            enabled = true
+        }
+
+        vectorDrawables.useSupportLibrary = true
+
+        multiDexEnabled true
+
+        buildConfigField "boolean", "USE_SHORT_SMS_CODES", project.USE_SHORT_SMS_CODES
+        buildConfigField "boolean", "ADD_CARD_ENABLED", project.ADD_CARD_ENABLED
+        buildConfigField "boolean", "USE_ADD_CARD_FORM", project.USE_ADD_CARD_FORM
+        buildConfigField "String", "FLURRY_API_KEY", project.FLURRY_API_KEY
+        buildConfigField "String", "AMPLITUDE_API_KEY", project.AMPLITUDE_API_KEY
+
+        buildConfigField "Integer", "PASSWORD_MIN_LENGTH", project.PASSWORD_MIN_LENGTH
+
+        buildConfigField "String", "USER_AGENT_PRODUCT_NAME", project.USER_AGENT_PRODUCT_NAME
+        buildConfigField "String", "AUTHORIZATION", project.AUTHORIZATION
+        buildConfigField "String", "HEADER_USER_AGENT", project.HEADER_USER_AGENT
+        buildConfigField "String", "PLATFORM_ID", project.PLATFORM_ID
+        buildConfigField "String", "PUSH_NOTIFICATIONS_PLATFORM_CODE", project.PUSH_NOTIFICATIONS_PLATFORM_CODE
+
+        buildConfigField "Integer", "CURRENCY_VIEW_PRECISION", "2"
+        buildConfigField "boolean", "BUGSEE_ENABLED", "false"
+    }
+    productFlavors {
+        prod {
+            applicationId project.APP_ID_PROD
+        }
+        beta {
+            applicationId project.APP_ID_BETA
+        }
+        stage {
+            applicationId project.APP_ID_STAGE
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    lintOptions {
+        abortOnError false
+        disable 'MissingTranslation'
+    }
+    dexOptions {
+        preDexLibraries true
+    }
+
+    androidExtensions {
+        experimental = true
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+    api fileTree(include: ['*.jar'], dir: 'libs')
+
+    implementation project(':crypteriumsdk')
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "androidx.core:core-ktx:$androidCoreKtxVersion"
+
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+
+    //ktx
+    implementation "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
+    implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
+    implementation "androidx.preference:preference-ktx:$prefsKtxVersion"
+
+    // Support Library
+    implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
+    implementation "androidx.legacy:legacy-support-v4:$androidxVersion"
+    implementation "androidx.cardview:cardview:$androidxVersion"
+    implementation "com.google.android.material:material:$materialVersion"
+    implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
+
+    // Lifecycle
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-runtime:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
+    //без нее на 6 и ниже падает
+    kapt "androidx.lifecycle:lifecycle-compiler:$lifecycleVersion"
+
+    implementation "com.airbnb.android:lottie:$lottieVersion"
+
+    // FlowLayout
+    implementation "com.nex3z:flow-layout:$nex3zFlowLayoutVersion"
+
+    implementation "androidx.emoji:emoji:$emojiVersion"
+    implementation "androidx.emoji:emoji-appcompat:$emojiVersion"
+    implementation "androidx.emoji:emoji-bundled:$emojiVersion"
+
+    implementation "com.github.Cielsk:clearable-edittext:$clearableEditTextVersion"
+
+    implementation "com.google.dagger:dagger:$daggerVersion"
+    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+
+    implementation "net.opacapp:multiline-collapsingtoolbar:$opacappMultilineCollapsingToolbarVersion"
+
+    implementation "io.reactivex.rxjava2:rxjava:$rxjavaVersion"
+    implementation "io.reactivex.rxjava2:rxandroid:$rxandroidVersion"
+    implementation "io.reactivex.rxjava2:rxkotlin:$rxkotlinVersion"
+
+    implementation "com.google.android.gms:play-services-maps:$playServicesMapVersion"
+
+    implementation "com.jakewharton.timber:timber:$timberVersion"
+
+    implementation "com.googlecode.libphonenumber:libphonenumber:$phoneNumberVersion"
+
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-scalars:$retrofitVersion"
+
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
+    implementation "com.facebook.stetho:stetho:$stethoVersion"
+    implementation "com.facebook.stetho:stetho-okhttp3:$stethoVersion"
+
+    // ReactiveCache
+    implementation "com.github.VictorAlbertos:ReactiveCache:$reactiveCacheVersion"
+    implementation "com.github.VictorAlbertos.Jolyglot:gson:$jolyglotGsonVersion"
+
+    // Flurry Analytics
+    implementation "com.flurry.android:analytics:$flurryAnalyticsVersion"
+
+    implementation "com.amplitude:android-sdk:$amplitudeSdkVersion"
+
+    implementation "io.branch.sdk.android:library:$branchVersion"
+
+    // Room 2003 (best film ever)
+    implementation "androidx.room:room-runtime:$roomVersion"
+    kapt "androidx.room:room-compiler:$roomVersion"
+
+    implementation "com.github.PhilJay:MPAndroidChart:$mpAndroidChartVersion"
+
+    implementation "com.github.bumptech.glide:glide:$glideVersion"
+    kapt "com.github.bumptech.glide:compiler:$glideVersion"
+
+    implementation "com.otaliastudios:cameraview:$cameraviewVersion"
+
+    implementation "com.google.guava:guava:$guavaVersion"
+
+    implementation "com.baoyz.pullrefreshlayout:library:$pullRefreshLayoutVersion"
+
+    implementation "com.github.shts:StoriesProgressView:$storyProgressView"
+
+    implementation "com.google.firebase:firebase-config:$firebaseConfigVersion"
+    implementation "com.google.firebase:firebase-perf:$firebasePerfVersion"
+    implementation "com.google.firebase:firebase-crashlytics:$crashlyticsVersion"
+    implementation "com.google.firebase:firebase-messaging:$firebaseMessagingVersion"
+    implementation "com.google.firebase:firebase-core:$firebaseCoreVersion"
+
+    implementation "com.android.installreferrer:installreferrer:$installReferrerVersion"
+
+    implementation "com.github.kenglxn.QRGen:android:$kenglxnQrGenVersion"
+
+    implementation "com.journeyapps:zxing-android-embedded:$zxingVersion"
+
+    implementation "com.facebook.shimmer:shimmer:$shimmerVersion"
+
+    implementation "com.daimajia.swipelayout:library:$daimajiaSwipeLayoutVersion"
+
+    implementation "org.apache.commons:commons-lang3:$apacheLang3"
+
+    implementation "log4j:log4j:$log4j"
+}
+
+
+android.applicationVariants.all { variant ->
+    variant.outputs.all { output ->
+        def outputFile = output.outputFile
+        if (outputFile != null && outputFile.name.endsWith('.apk')) {
+            def fileName = project.FILENAME_PREFIX + "-${versionName}-${versionCode}-${buildType.name}.apk"
+            outputFileName = new File(fileName)
+        }
+    }
+}
